@@ -1,7 +1,0 @@
-﻿  main.cpp
-glfw3.lib(input.obj) : warning LNK4099: PDB 'glfw3.pdb' was not found with 'glfw3.lib(input.obj)' or at 'X:\Repos\Plus\x64\Debug\glfw3.pdb'; linking object as if no debug info
-glfw3.lib(monitor.obj) : warning LNK4099: PDB 'glfw3.pdb' was not found with 'glfw3.lib(monitor.obj)' or at 'X:\Repos\Plus\x64\Debug\glfw3.pdb'; linking object as if no debug info
-glfw3.lib(window.obj) : warning LNK4099: PDB 'glfw3.pdb' was not found with 'glfw3.lib(window.obj)' or at 'X:\Repos\Plus\x64\Debug\glfw3.pdb'; linking object as if no debug info
-glfw3.lib(win32_joystick.obj) : warning LNK4099: PDB 'glfw3.pdb' was not found with 'glfw3.lib(win32_joystick.obj)' or at 'X:\Repos\Plus\x64\Debug\glfw3.pdb'; linking object as if no debug info
-glfw3.lib(win32_window.obj) : warning LNK4099: PDB 'glfw3.pdb' was not found with 'glfw3.lib(win32_window.obj)' or at 'X:\Repos\Plus\x64\Debug\glfw3.pdb'; linking object as if no debug info
-  Plus.vcxproj -> X:\Repos\Plus\x64\Debug\Plus.exe
