@@ -16,19 +16,19 @@
 #include "VAO.h"
 #include "VBO.h"
 #include "EBO.h"
+#include "Camera.h"
 
-
-const unsigned int width = 800;
-const unsigned int height = 800;
+const unsigned int width = 1600;
+const unsigned int height = 1600;
 
 	// Vertices coordinates 
 GLfloat vertices[] =
 {//	  COORDINATES		  /			COLORS				/	TexCoord		//
-	-0.5f,	 0.0f,	0.5f,		0.83f,	0.70f,	0.44f,		0.0f,	0.0f,	
-	-0.5f,	 0.0f, -0.5f,		0.83f,	0.70f,	0.44f,		5.0f,	0.0f,	
-	 0.5f,	 0.0f, -0.5f,		0.83f,	0.70f,	0.44f,		0.0f,	0.0f,
-	 0.5f,	 0.0f,	0.5f,		0.83f,	0.70f,	0.44f,		5.0f,	0.0f,
-	 0.0f,	 0.8f,	0.0f,		0.92f,	0.86f,	0.76f,		2.5f,	5.0f
+	-0.5f,	 0.0f,	0.5f,		0.03f,	0.00f,	0.04f,		0.0f,	0.0f,	
+	-0.5f,	 0.0f, -0.5f,		0.03f,	0.00f,	0.04f,		5.0f,	0.0f,
+	 0.5f,	 0.0f, -0.5f,		0.03f,	0.00f,	0.04f,		0.0f,	0.0f,
+	 0.5f,	 0.0f,	0.5f,		0.03f,	0.00f,	0.04f,		5.0f,	0.0f,
+	 0.0f,	 0.8f,	0.0f,		1.00f,	1.00f,	1.00f,		2.5f,	5.0f
 
 };
 
@@ -111,21 +111,18 @@ int main()
 	VBO1.Unbind();
 	EBO1.Unbind();
 
-	// Gets ID of uniform called "scale"
-	GLuint uniID = glGetUniformLocation(shaderProgram.ID, "scale");
 
 	// Texture
 
-	Texture popCat("brick.png", GL_TEXTURE_2D, GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE);
+	Texture popCat("pop_cat.png", GL_TEXTURE_2D, GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE);
 	popCat.texUnit(shaderProgram, "tex0", 0);
-
-
-	// Variables that help the rotation of the pyramid
-	float rotation = 0.0f;
-	double prevTime = glfwGetTime();
 
 	//Enables the Depth Buffer
 	glEnable(GL_DEPTH_TEST);
+
+
+	//Create camera object
+	Camera camera(width, height, glm::vec3(0.0f, 0.0f, 2.0f));
 
 	// Main while loop
 	while (!glfwWindowShouldClose(window))
@@ -138,38 +135,12 @@ int main()
 		//Tell OpenGL which Shader Program we want to use
 		shaderProgram.Activate();
 
-
-		//Simple timer
-		double crntTime = glfwGetTime();
-		if(crntTime - prevTime >= 1 / 60)
-		{
-			rotation += 0.5f;
-			prevTime = crntTime;
-		}
+		// Handles camera inputs
+		camera.Inputs(window);
+		// Updates and exports the camera Matrix to the Vertex Shader
+		camera.Matrix(45.0f, 0.1f, 100.0f, shaderProgram, "camMatrix");
 
 
-		//Initializes matrices so they are not the null matrix
-		glm::mat4 model = glm::mat4(1.0f);
-		glm::mat4 view = glm::mat4(1.0f);
-		glm::mat4 proj = glm::mat4(1.0f);
-
-
-		// Assigns different transformations to each matrix
-		model = glm::rotate(model, glm::radians(rotation), glm::vec3(0.0f, 1.0f, 0.0f));
-		view = glm::translate(view, glm::vec3(0.0f, -0.5f, -2.0f));
-		proj = glm::perspective(glm::radians(45.0f), (float)(width / height), 0.1f, 100.0f);
-
-
-		// Outputs the matrices into the Vertex Shader
-		int modelLoc = glGetUniformLocation(shaderProgram.ID, "model");
-		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		int viewLoc = glGetUniformLocation(shaderProgram.ID, "view");
-		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
-		int projLoc = glGetUniformLocation(shaderProgram.ID, "proj");
-		glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(proj));
-
-		// Assigns a value to the uniform; NOTE: Must always be done after activating the Shader Program
-		glUniform1f(uniID, 0.5f);
 		// Binds texture so that it appears in rendering
 		popCat.Bind();
 		// Bind the VAO so OpenGL knows to use it
