@@ -29,7 +29,7 @@ GLfloat vertices[] =
 	-1.0f, 0.0f,  1.0f,		0.0f, 0.0f, 0.0f,		0.0f, 0.0f,		0.0f, 1.0f, 0.0f,
 	-1.0f, 0.0f, -1.0f,		0.0f, 0.0f, 0.0f,		0.0f, 1.0f,		0.0f, 1.0f, 0.0f,
 	 1.0f, 0.0f, -1.0f,		0.0f, 0.0f, 0.0f,		1.0f, 1.0f,		0.0f, 1.0f, 0.0f,
-	 1.0f, 0.0f,  1.0f,		0.0f, 0.0f, 0.0f,		1.0f, 0.0f,		0.0f, 1.0f, 0.0f
+	 1.0f, 0.0f,  1.0f,		0.0f, 0.0f, 0.0f,		1.0f, 0.0f,		0.0f, 1.0f, 0.0f,
 };
 
 
@@ -42,17 +42,16 @@ GLuint indices[] =
 };
 
 
-
 GLfloat lightVertices[] =
-{	//	COORDINATES     
-	-0.1f,	-0.1f,   0.1f,
-	-0.1f,	-0.1f,  -0.1f,
-	 0.1f,	-0.1f,  -0.1f,
-	 0.1f,	-0.1f,   0.1f,
-	-0.1f,	 0.1f,   0.1f,
-	-0.1f,	 0.1f,  -0.1f,
-	-0.1f,	-0.1f,   0.1f,
-	 0.1f,	 0.1f,   0.1f,
+{ //     COORDINATES     //
+	-0.1f, -0.1f,  0.1f,
+	-0.1f, -0.1f, -0.1f,
+	 0.1f, -0.1f, -0.1f,
+	 0.1f, -0.1f,  0.1f,
+	-0.1f,  0.1f,  0.1f,
+	-0.1f,  0.1f, -0.1f,
+	 0.1f,  0.1f, -0.1f,
+	 0.1f,  0.1f,  0.1f
 };
 
 
@@ -71,7 +70,6 @@ GLuint lightIndices[] =
 	4, 5, 6,
 	4, 6, 7
 };
-
 
 
 int main()
@@ -177,7 +175,7 @@ int main()
 	shaderProgram.Activate();
 	glUniformMatrix4fv(glGetUniformLocation(shaderProgram.ID, "model"), 1, GL_FALSE, glm::value_ptr(pyramidModel));
 	glUniform4f(glGetUniformLocation(shaderProgram.ID, "lightColor"), lightColor.x, lightColor.y, lightColor.z, lightColor.w);
-	glUniform3f(glGetUniformLocation(shaderProgram.ID, "lightPos"), lightColor.x, lightColor.y, lightColor.z);
+	glUniform3f(glGetUniformLocation(shaderProgram.ID, "lightPos"), lightPos.x, lightPos.y, lightPos.z);
 
 
 
