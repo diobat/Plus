@@ -56,6 +56,8 @@ int main()
 	//Generates Shader object using shaders default.vert and default.frag
 	Shader shaderProgram("default.vert", "default.frag");
 
+	Shader outliningProgram("outlining.vert", "outlining.frag");
+
 
 	glm::vec4 lightColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
 	glm::vec3 lightPos = glm::vec3(0.5f, 0.5f, 0.5f);
@@ -74,22 +76,24 @@ int main()
 
 	//Enables the Depth Buffer
 	glEnable(GL_DEPTH_TEST);
-	glDepthFunc(GL_LESS);
+	//glDepthFunc(GL_LESS);
+	glEnable(GL_STENCIL_TEST);
+	glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
 
 	//Create camera object
 	Camera camera(width, height, glm::vec3(0.0f, 0.0f, 2.0f));
 
-	Model ground("Resources/models/ground/scene.gltf");
-	Model trees("Resources/models/trees/scene.gltf");
+	Model crow("Resources/models/crow/scene.gltf");
+	//Model trees("Resources/models/trees/scene.gltf");
 
 	// Main while loop
 	while (!glfwWindowShouldClose(window))
 	{
 
 		// Specify the color of the background
-		glClearColor(0.85f, 0.85f, 0.90f, 1.0f);
+		glClearColor(0.15f, 0.15f, 0.10f, 1.0f);
 		// Clean the back buffer and the depth buffer
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
 
 
@@ -100,8 +104,21 @@ int main()
 
 
 		// Draw a model
-		ground.Draw(shaderProgram, camera);
-		trees.Draw(shaderProgram, camera);
+		glStencilFunc(GL_ALWAYS, 1, 0xFF);
+		glStencilMask(0xFF);
+
+		crow.Draw(shaderProgram, camera);
+
+		glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
+		glStencilMask(0x00);
+		glDisable(GL_DEPTH_TEST);
+		outliningProgram.Activate();
+		glUniform1f(glGetUniformLocation(outliningProgram.ID, "outlining"), 0.08f);
+		crow.Draw(outliningProgram, camera);
+
+		glStencilMask(0xFF);
+		glStencilFunc(GL_ALWAYS, 0, 0xFF);
+		glEnable(GL_DEPTH_TEST);
 
 		// Swap the back buffer with the front buffer
 		glfwSwapBuffers(window);
