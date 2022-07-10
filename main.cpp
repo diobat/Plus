@@ -71,24 +71,52 @@ int main()
 
 
 
-
-
-
 	//Enables the Depth Buffer
 	glEnable(GL_DEPTH_TEST);
-	//glDepthFunc(GL_LESS);
-	glEnable(GL_STENCIL_TEST);
-	glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
+
+	glEnable(GL_CULL_FACE);
+	glCullFace(GL_FRONT);
+	glFrontFace(GL_CCW);
+
 
 	//Create camera object
 	Camera camera(width, height, glm::vec3(0.0f, 0.0f, 2.0f));
 
-	Model crow("Resources/models/crow/scene.gltf");
-	//Model trees("Resources/models/trees/scene.gltf");
+
+	// Load in the models from .gltf files
+	Model model("Resources/models/statue/scene.gltf");
+
+	double prevTime = 0.0;
+	double crntTime = 0.0;
+	double timeDiff; 
+	unsigned int counter = 0;
+
+	// Disable V-Sync
+	glfwSwapInterval(0);
 
 	// Main while loop
 	while (!glfwWindowShouldClose(window))
 	{
+		crntTime = glfwGetTime();
+		timeDiff = crntTime - prevTime;
+		counter++;
+		if (timeDiff >= 1.0 / 30.0)
+		{
+			std::string FPS = std::to_string((1.0 / timeDiff) * counter);
+			std::string ms = std::to_string((timeDiff / counter) * 1000);
+			std::string newTitle = "OpenGL - " + FPS + "FPS / " + ms + "ms";
+			glfwSetWindowTitle(window, newTitle.c_str());
+			prevTime = crntTime;
+			counter = 0;
+
+			// Handles camera inputs
+			// This function is inside this if so it gets called a fixed
+			// number of times per second and camera speed doesnt get tied
+			// with FPS rate
+			camera.Inputs(window);
+
+		}
+
 
 		// Specify the color of the background
 		glClearColor(0.15f, 0.15f, 0.10f, 1.0f);
@@ -97,8 +125,7 @@ int main()
 
 
 
-		// Handles camera inputs
-		camera.Inputs(window);
+
 		// Updates and exports the camera Matrix to the Vertex Shader
 		camera.updateMatrix(45.0f, 0.1f, 100.0f);
 
@@ -107,18 +134,9 @@ int main()
 		glStencilFunc(GL_ALWAYS, 1, 0xFF);
 		glStencilMask(0xFF);
 
-		crow.Draw(shaderProgram, camera);
+		model.Draw(shaderProgram, camera);
 
-		glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
-		glStencilMask(0x00);
-		glDisable(GL_DEPTH_TEST);
-		outliningProgram.Activate();
-		glUniform1f(glGetUniformLocation(outliningProgram.ID, "outlining"), 0.08f);
-		crow.Draw(outliningProgram, camera);
-
-		glStencilMask(0xFF);
-		glStencilFunc(GL_ALWAYS, 0, 0xFF);
-		glEnable(GL_DEPTH_TEST);
+		
 
 		// Swap the back buffer with the front buffer
 		glfwSwapBuffers(window);
