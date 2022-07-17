@@ -120,5 +120,13 @@
     <None Include="windows.frag">
       <Filter>Resource Files\Shaders</Filter>
     </None>
+    <None Include="framebuffer.frag">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="framebuffer.vert">
+      <Filter>Resource Files\Shaders</Filter>
+    </Text>
   </ItemGroup>
 </Project>
