@@ -132,12 +132,21 @@
     <None Include="skybox.vert">
       <Filter>Resource Files\Shaders</Filter>
     </None>
+    <None Include="default.geom">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="normals.frag">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Text Include="framebuffer.vert">
       <Filter>Resource Files\Shaders</Filter>
     </Text>
     <Text Include="skybox.frag">
+      <Filter>Resource Files\Shaders</Filter>
+    </Text>
+    <Text Include="normals.geom">
       <Filter>Resource Files\Shaders</Filter>
     </Text>
   </ItemGroup>

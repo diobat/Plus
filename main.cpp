@@ -58,8 +58,10 @@ int main()
 
 
 	//Generates Shader object using shaders default.vert and default.frag
-	Shader shaderProgram("default.vert", "default.frag");
-	Shader skyboxShader("skybox.vert", "skybox.frag");
+	Shader shaderProgram("default.vert", "default.frag", "default.geom");
+	Shader normalsShader("default.vert", "normals.frag", "normals.geom");
+
+	Shader skyboxShader("skybox.vert", "skybox.frag", "default.geom");
 
 
 
@@ -91,7 +93,8 @@ int main()
 
 
 	// Load in the models from .gltf files
-	Model airplane("Resources/models/airplane/scene.gltf");
+	Model statue("Resources/models/statue/scene.gltf");
+
 
 	std::vector<std::string> facesCubemap =
 	{
@@ -170,7 +173,8 @@ int main()
 
 
 		// Draw a model
-		airplane.Draw(shaderProgram, camera);
+		statue.Draw(shaderProgram, camera);
+		statue.Draw(normalsShader, camera);
 
 		skybox.Draw(skyboxShader, camera);
 
@@ -186,6 +190,8 @@ int main()
 
 	// Delete all the objects we've created
 	shaderProgram.Delete();
+	normalsShader.Delete();
+	skyboxShader.Delete();
 	// Delete window at the end of the main
 	glfwDestroyWindow(window);		
 	// Exit GLFW before leaving main

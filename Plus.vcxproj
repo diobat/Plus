@@ -179,11 +179,13 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="default.frag" />
+    <None Include="default.geom" />
     <None Include="default.vert" />
     <None Include="framebuffer.frag" />
     <None Include="grass.frag" />
     <None Include="light.frag" />
     <None Include="light.vert" />
+    <None Include="normals.frag" />
     <None Include="outlining.frag" />
     <None Include="outlining.vert" />
     <None Include="skybox.vert" />
@@ -192,6 +194,7 @@
   <ItemGroup>
     <Text Include="framebuffer.vert" />
     <Text Include="skybox.frag" />
+    <Text Include="normals.geom" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
