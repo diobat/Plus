@@ -8,7 +8,7 @@
 const unsigned int width = 1600;
 const unsigned int height = 1600;
 
-
+unsigned int samples = 8;
 
 
 float randf()
@@ -27,6 +27,8 @@ int main()
 
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+	glfwWindowHint(GLFW_SAMPLES, samples);
+
 
 	// Tell OpenGL we are using the core profile, as opposed to the compatibility profile
 	// In this profile we only have access to the modern functions
@@ -56,15 +58,10 @@ int main()
 
 
 
-
-
-
-
 	//Generates Shader object using shaders default.vert and default.frag
 	Shader shaderProgram("default.vert", "default.frag", "default.geom");
 
 	Shader skyboxShader("skybox.vert", "skybox.frag");
-	Shader asteroidShader("asteroid.vert", "default.frag");
 
 
 	// Take care of all light related things
@@ -78,16 +75,19 @@ int main()
 	glUniform3f(glGetUniformLocation(shaderProgram.ID, "lightPos"), lightPos.x, lightPos.y, lightPos.z);
 	skyboxShader.Activate();
 	glUniform1i(glGetUniformLocation(skyboxShader.ID, "skybox"), 0);
-	asteroidShader.Activate();
-	glUniform4f(glGetUniformLocation(shaderProgram.ID, "lightColor"), lightColor.x, lightColor.y, lightColor.z, lightColor.w);
-	glUniform3f(glGetUniformLocation(shaderProgram.ID, "lightPos"), lightPos.x, lightPos.y, lightPos.z);
+
 
 
 	//Enables the Depth Buffer
 	glEnable(GL_DEPTH_TEST);
 
+	glEnable(GL_MULTISAMPLE);
+
+	// Enables Face Culling
 	glEnable(GL_CULL_FACE);
+	// Keeps front faces
 	glCullFace(GL_FRONT);
+	// Uses counterclockwise standard
 	glFrontFace(GL_CCW);
 
 
@@ -98,8 +98,7 @@ int main()
 
 
 	// Load in the models from .gltf files
-	Model jupiter("Resources/models/jupiter/scene.gltf");
-
+	Model crow("Resources/models/crow/scene.gltf");
 
 
 	std::vector<std::string> facesCubemap =
@@ -124,68 +123,8 @@ int main()
 	// Keeps track of the amount of frames in timeDiff
 	unsigned int counter = 0;
 
-
-
 	// Disable V-Sync (not advised)
 	//glfwSwapInterval(0);
-
-
-
-	// The number of asteroids to be created
-	const unsigned int number = 5000;
-	// Radius of circle around which asteroids orbit
-	float radius = 100.0f;
-	// How much ateroids deviate from the radius
-	float radiusDeviation = 25.0f;
-
-	// Holds all transformations for the asteroids
-	std::vector <glm::mat4> instanceMatrix;
-
-
-
-	for (unsigned int i = 0; i < number; i++)
-	{
-		// Generates x and y for the function x^2 + y^2 = radius^2 which is a circle
-		float x = randf();
-		float finalRadius = radius + randf() * radiusDeviation;
-		float y = ((rand() % 2) * 2 - 1) * sqrt(1.0f - x * x);
-
-		glm::vec3 tempTranslation;
-		glm::quat tempRotation;
-		glm::vec3 tempScale;
-
-		// Makes the random distribution more even
-		if (randf() > 0.5f)
-		{
-			// Generates a translation near a circle of radius "radius"
-			tempTranslation = glm::vec3(y * finalRadius, randf(), x * finalRadius);
-		}
-		else
-		{
-			// Generates a translation near a circle of radius "radius"
-			tempTranslation = glm::vec3(x * finalRadius, randf(), y * finalRadius);
-		}
-
-		// Generates random rotations
-		tempRotation = glm::quat(1.0f, randf(), randf(), randf());
-		// Generates random scales
-		tempScale = 0.1f * glm::vec3(randf(), randf(), randf());
-
-		// Initialize Matrix
-		glm::mat4 trans = glm::mat4(1.0f);
-		glm::mat4 rot = glm::mat4(1.0f);
-		glm::mat4 sca = glm::mat4(1.0f);
-
-		// Transform the matrices to their correct form
-		trans = glm::translate(trans, tempTranslation);
-		rot = glm::mat4_cast(tempRotation);
-		sca = glm::scale(sca, tempScale);
-
-		instanceMatrix.push_back(trans * rot * sca);
-	}
-
-
-	Model asteroid("Resources/models/asteroid/scene.gltf", number, instanceMatrix);
 
 
 	// Main while loop
@@ -228,13 +167,11 @@ int main()
 		camera.updateMatrix(45.0f, 0.1f, 1000.0f);
 
 
-		// Draw jupiter
-		jupiter.Draw(shaderProgram, camera);
-		// Draw the asteroids
+		// Draw the model
 
-		asteroid.Draw(asteroidShader, camera);
+		crow.Draw(shaderProgram, camera);
 
-
+		// Draw the skybox
 		skybox.Draw(skyboxShader, camera);
 
 
