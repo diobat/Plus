@@ -1,7 +1,7 @@
 // This is my implementation of the following tutorial
 // https://www.youtube.com/watch?v=45MIykWJ-C4
 
-
+#include <math.h>
 #include "Model.h"
 #include "Skybox.h"
 
@@ -11,7 +11,10 @@ const unsigned int height = 1600;
 
 
 
-
+float randf()
+{
+	return -1.0f + (rand() / (RAND_MAX / 2.0f));
+}
 
 
 
@@ -59,10 +62,9 @@ int main()
 
 	//Generates Shader object using shaders default.vert and default.frag
 	Shader shaderProgram("default.vert", "default.frag", "default.geom");
-	Shader normalsShader("default.vert", "normals.frag", "normals.geom");
 
-	Shader skyboxShader("skybox.vert", "skybox.frag", "default.geom");
-
+	Shader skyboxShader("skybox.vert", "skybox.frag");
+	Shader asteroidShader("asteroid.vert", "default.frag");
 
 
 	// Take care of all light related things
@@ -76,6 +78,9 @@ int main()
 	glUniform3f(glGetUniformLocation(shaderProgram.ID, "lightPos"), lightPos.x, lightPos.y, lightPos.z);
 	skyboxShader.Activate();
 	glUniform1i(glGetUniformLocation(skyboxShader.ID, "skybox"), 0);
+	asteroidShader.Activate();
+	glUniform4f(glGetUniformLocation(shaderProgram.ID, "lightColor"), lightColor.x, lightColor.y, lightColor.z, lightColor.w);
+	glUniform3f(glGetUniformLocation(shaderProgram.ID, "lightPos"), lightPos.x, lightPos.y, lightPos.z);
 
 
 	//Enables the Depth Buffer
@@ -93,17 +98,18 @@ int main()
 
 
 	// Load in the models from .gltf files
-	Model statue("Resources/models/statue/scene.gltf");
+	Model jupiter("Resources/models/jupiter/scene.gltf");
+
 
 
 	std::vector<std::string> facesCubemap =
 	{
-		"Resources/skybox/right.jpg",
-		"Resources/skybox/left.jpg",
-		"Resources/skybox/top.jpg",
-		"Resources/skybox/bottom.jpg",
-		"Resources/skybox/front.jpg",
-		"Resources/skybox/back.jpg"
+		"Resources/skybox/right.png",
+		"Resources/skybox/left.png",
+		"Resources/skybox/top.png",
+		"Resources/skybox/bottom.png",
+		"Resources/skybox/front.png",
+		"Resources/skybox/back.png"
 	};
 
 	Skybox skybox(facesCubemap);
@@ -125,11 +131,61 @@ int main()
 
 
 
+	// The number of asteroids to be created
+	const unsigned int number = 5000;
+	// Radius of circle around which asteroids orbit
+	float radius = 100.0f;
+	// How much ateroids deviate from the radius
+	float radiusDeviation = 25.0f;
+
+	// Holds all transformations for the asteroids
+	std::vector <glm::mat4> instanceMatrix;
 
 
 
+	for (unsigned int i = 0; i < number; i++)
+	{
+		// Generates x and y for the function x^2 + y^2 = radius^2 which is a circle
+		float x = randf();
+		float finalRadius = radius + randf() * radiusDeviation;
+		float y = ((rand() % 2) * 2 - 1) * sqrt(1.0f - x * x);
+
+		glm::vec3 tempTranslation;
+		glm::quat tempRotation;
+		glm::vec3 tempScale;
+
+		// Makes the random distribution more even
+		if (randf() > 0.5f)
+		{
+			// Generates a translation near a circle of radius "radius"
+			tempTranslation = glm::vec3(y * finalRadius, randf(), x * finalRadius);
+		}
+		else
+		{
+			// Generates a translation near a circle of radius "radius"
+			tempTranslation = glm::vec3(x * finalRadius, randf(), y * finalRadius);
+		}
+
+		// Generates random rotations
+		tempRotation = glm::quat(1.0f, randf(), randf(), randf());
+		// Generates random scales
+		tempScale = 0.1f * glm::vec3(randf(), randf(), randf());
+
+		// Initialize Matrix
+		glm::mat4 trans = glm::mat4(1.0f);
+		glm::mat4 rot = glm::mat4(1.0f);
+		glm::mat4 sca = glm::mat4(1.0f);
+
+		// Transform the matrices to their correct form
+		trans = glm::translate(trans, tempTranslation);
+		rot = glm::mat4_cast(tempRotation);
+		sca = glm::scale(sca, tempScale);
+
+		instanceMatrix.push_back(trans * rot * sca);
+	}
 
 
+	Model asteroid("Resources/models/asteroid/scene.gltf", number, instanceMatrix);
 
 
 	// Main while loop
@@ -169,12 +225,15 @@ int main()
 		// Handles camera inputs (delete this if you have disabled VSync)
 		camera.Inputs(window);
 		// Updates and exports the camera Matrix to the Vertex Shader
-		camera.updateMatrix(45.0f, 0.1f, 100.0f);
+		camera.updateMatrix(45.0f, 0.1f, 1000.0f);
 
 
-		// Draw a model
-		statue.Draw(shaderProgram, camera);
-		statue.Draw(normalsShader, camera);
+		// Draw jupiter
+		jupiter.Draw(shaderProgram, camera);
+		// Draw the asteroids
+
+		asteroid.Draw(asteroidShader, camera);
+
 
 		skybox.Draw(skyboxShader, camera);
 
@@ -190,7 +249,6 @@ int main()
 
 	// Delete all the objects we've created
 	shaderProgram.Delete();
-	normalsShader.Delete();
 	skyboxShader.Delete();
 	// Delete window at the end of the main
 	glfwDestroyWindow(window);		

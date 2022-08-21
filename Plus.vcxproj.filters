@@ -19,6 +19,27 @@
     <Filter Include="Resource Files\Textures">
       <UniqueIdentifier>{f992baf7-30fa-4a2b-be94-8dad23585db2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\Shaders\Default">
+      <UniqueIdentifier>{47a769bb-9cb8-4734-bf7e-48bc4e22df8d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Shaders\normals">
+      <UniqueIdentifier>{9c0b8215-2348-496f-9587-dc4e6f7f546f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Shaders\framebuffer">
+      <UniqueIdentifier>{b3ab1e76-1cfc-421b-a713-85d87872bc8d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Shaders\Skybox">
+      <UniqueIdentifier>{904abef6-cb99-408a-8b54-907c9dd488e6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Shaders\light">
+      <UniqueIdentifier>{41549630-3031-413f-9083-b62d073b15f5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Shaders\Blending">
+      <UniqueIdentifier>{e86930e2-b1c4-4f7a-9f0f-3ea50f81efbe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Shaders\Instancing">
+      <UniqueIdentifier>{04abab9a-426e-4a16-b386-33a0ac08ab41}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EBO.h">
@@ -102,52 +123,55 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="light.vert">
-      <Filter>Resource Files\Shaders</Filter>
-    </None>
     <None Include="default.frag">
-      <Filter>Resource Files\Shaders</Filter>
-    </None>
-    <None Include="default.vert">
-      <Filter>Resource Files\Shaders</Filter>
-    </None>
-    <None Include="light.frag">
-      <Filter>Resource Files\Shaders</Filter>
-    </None>
-    <None Include="outlining.frag">
-      <Filter>Resource Files\Shaders</Filter>
-    </None>
-    <None Include="outlining.vert">
-      <Filter>Resource Files\Shaders</Filter>
-    </None>
-    <None Include="grass.frag">
-      <Filter>Resource Files\Shaders</Filter>
-    </None>
-    <None Include="windows.frag">
-      <Filter>Resource Files\Shaders</Filter>
-    </None>
-    <None Include="framebuffer.frag">
-      <Filter>Resource Files\Shaders</Filter>
-    </None>
-    <None Include="skybox.vert">
-      <Filter>Resource Files\Shaders</Filter>
+      <Filter>Resource Files\Shaders\Default</Filter>
     </None>
     <None Include="default.geom">
-      <Filter>Resource Files\Shaders</Filter>
+      <Filter>Resource Files\Shaders\Default</Filter>
+    </None>
+    <None Include="default.vert">
+      <Filter>Resource Files\Shaders\Default</Filter>
     </None>
     <None Include="normals.frag">
-      <Filter>Resource Files\Shaders</Filter>
+      <Filter>Resource Files\Shaders\normals</Filter>
+    </None>
+    <None Include="framebuffer.frag">
+      <Filter>Resource Files\Shaders\framebuffer</Filter>
+    </None>
+    <None Include="outlining.vert">
+      <Filter>Resource Files\Shaders\framebuffer</Filter>
+    </None>
+    <None Include="outlining.frag">
+      <Filter>Resource Files\Shaders\framebuffer</Filter>
+    </None>
+    <None Include="skybox.vert">
+      <Filter>Resource Files\Shaders\Skybox</Filter>
+    </None>
+    <None Include="light.frag">
+      <Filter>Resource Files\Shaders\light</Filter>
+    </None>
+    <None Include="light.vert">
+      <Filter>Resource Files\Shaders\light</Filter>
+    </None>
+    <None Include="windows.frag">
+      <Filter>Resource Files\Shaders\Blending</Filter>
+    </None>
+    <None Include="grass.frag">
+      <Filter>Resource Files\Shaders\Blending</Filter>
+    </None>
+    <None Include="asteroid.vert">
+      <Filter>Resource Files\Shaders\Instancing</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Text Include="normals.geom">
+      <Filter>Resource Files\Shaders\normals</Filter>
+    </Text>
     <Text Include="framebuffer.vert">
-      <Filter>Resource Files\Shaders</Filter>
+      <Filter>Resource Files\Shaders\framebuffer</Filter>
     </Text>
     <Text Include="skybox.frag">
-      <Filter>Resource Files\Shaders</Filter>
-    </Text>
-    <Text Include="normals.geom">
-      <Filter>Resource Files\Shaders</Filter>
+      <Filter>Resource Files\Shaders\Skybox</Filter>
     </Text>
   </ItemGroup>
 </Project>

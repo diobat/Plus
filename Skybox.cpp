@@ -77,8 +77,10 @@ void Skybox::Draw(Shader shader, Camera camera)
 	shader.Activate();
 	glm::mat4 view = glm::mat4(1.0);
 	glm::mat4 projection = glm::mat4(1.0f);
+
 	view = glm::mat4(glm::mat3(glm::lookAt(camera.Position, camera.Position + camera.Orientation, camera.Up)));
 	projection = glm::perspective(glm::radians(45.0f), float(1600 / 1600), 0.1f, 100.0f);
+
 	glUniformMatrix4fv(glGetUniformLocation(shader.ID, "view"), 1, GL_FALSE, glm::value_ptr(view));
 	glUniformMatrix4fv(glGetUniformLocation(shader.ID, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
 
